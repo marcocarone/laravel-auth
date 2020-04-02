@@ -51,6 +51,16 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+
+      $data = $request->all();
+      if(empty($data["path_img"])) {
+        $path = null;
+
+      } else {
+        $path = Storage::disk('public')->put('images', $data['path_img']);
+      }
+
+      // dd($data);
         $idUser = Auth::user()->id;
 
         // $request->validate($this->validazione);
@@ -60,9 +70,9 @@ class PostController extends Controller
           'path_img' => 'image|nullable',
           'pubblicato' => 'required|boolean'
         ]);
-        $data = $request->all();
+
         $newPost = new Post;
-        $path = Storage::disk('public')->put('images', $data['path_img']);
+
         $newPost->titolo = $data['titolo'];
         $newPost->corpo = $data['corpo'];
         $newPost->pubblicato = $data['pubblicato'];
@@ -123,6 +133,15 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+
+      $data = $request->all();
+      if(empty($data["path_img"])) {
+        $path = null;
+
+      } else {
+        $path = Storage::disk('public')->put('images', $data['path_img']);
+      }
+
         $idUser = Auth::user()->id;
         if (empty($post)) {
             abort(404);
@@ -138,9 +157,7 @@ class PostController extends Controller
           'pubblicato' => 'required|boolean',
           'path_img' => 'image|nullable'
         ]);
-        $data = $request->all();
-
-        $path = Storage::disk('public')->put('images', $data['path_img']);
+        
 
         $post->titolo = $data['titolo'];
         $post->corpo = $data['corpo'];

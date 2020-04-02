@@ -27,7 +27,7 @@
                     @endforeach
                 </div>
                 <div class="form-group">
-                    <input type="file" name="path_img" accept="image/*" value="{{$post->path_img}}">
+                    <input type="file" name="path_img" accept="image/*" >
                 </div>
                 <div class="form-group">
                     <label for="pubblicato">Pubblicato</label>
