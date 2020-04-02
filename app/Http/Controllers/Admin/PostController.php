@@ -60,7 +60,7 @@ class PostController extends Controller
         $path = Storage::disk('public')->put('images', $data['path_img']);
       }
 
-
+      // dd($data);
         $idUser = Auth::user()->id;
 
         // $request->validate($this->validazione);
