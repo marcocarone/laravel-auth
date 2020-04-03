@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\SendNewMail;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -51,16 +53,14 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $data = $request->all();
+        if (empty($data["path_img"])) {
+            $path = null;
+        } else {
+            $path = Storage::disk('public')->put('images', $data['path_img']);
+        }
 
-      $data = $request->all();
-      if(empty($data["path_img"])) {
-        $path = null;
-
-      } else {
-        $path = Storage::disk('public')->put('images', $data['path_img']);
-      }
-
-      // dd($data);
+        // dd($data);
         $idUser = Auth::user()->id;
 
         // $request->validate($this->validazione);
@@ -86,12 +86,11 @@ class PostController extends Controller
             return redirect()->back();
         }
 
-
-        $tags = $data['tags'];
-        if (!empty($tags)) {
-            $newPost->tags()->attach($tags);
+        if (!empty($data['tags'])) {
+              $post->tags()->attach($data['tags']);
         }
 
+        Mail::to('mail@mail.it')->send(new SendNewMail());
         return redirect()->route('admin.posts.show', $newPost->slug);
     }
 
@@ -133,14 +132,12 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-
-      $data = $request->all();
-      if(empty($data["path_img"])) {
-        $path = $post->path_img;
-
-      } else {
-        $path = Storage::disk('public')->put('images', $data['path_img']);
-      }
+        $data = $request->all();
+        if (empty($data["path_img"])) {
+            $path = $post->path_img;
+        } else {
+            $path = Storage::disk('public')->put('images', $data['path_img']);
+        }
 
         $idUser = Auth::user()->id;
         if (empty($post)) {
@@ -170,10 +167,10 @@ class PostController extends Controller
             return redirect()->back();
         }
 
+        // $tags = $data['tags'];
 
-        $tags = $data['tags'];
-        if (!empty($tags)) {
-            $post->tags()->sync($tags);
+        if (!empty($data['tags'])) {
+              $post->tags()->sync($data['tags']);
         }
 
         return redirect()->route('admin.posts.show', $post->slug);
