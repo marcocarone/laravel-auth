@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-
+{{-- @dd($post->pubblicato); --}}
 <form action="{{route('admin.posts.update', $post)}}" method="post" enctype="multipart/form-data">
     @csrf
     @method('PATCH')
@@ -32,8 +32,9 @@
                 <div class="form-group">
                     <label for="pubblicato">Pubblicato</label>
                     <select name="pubblicato">
-                        <option value="0">Non pubblicato</option>
-                        <option value="1">Pubblicato</option>
+
+                        <option value="0" {{($post->pubblicato == 0) ? 'selected' : ''}}>Non pubblicato</option>
+                        <option value="1" {{($post->pubblicato == 1) ? 'selected' : ''}}>Pubblicato</option>
                     </select>
                 </div>
             </div>
