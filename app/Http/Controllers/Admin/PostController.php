@@ -136,7 +136,7 @@ class PostController extends Controller
 
       $data = $request->all();
       if(empty($data["path_img"])) {
-        $path = null;
+        $path = $post->path_img;
 
       } else {
         $path = Storage::disk('public')->put('images', $data['path_img']);
